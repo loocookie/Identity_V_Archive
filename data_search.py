@@ -79,10 +79,10 @@ for n_row, row in data.reset_index().iterrows():
         h.markdown(f"<p style='text-align: left; font-weight: bold; font-size: 20px; color: #C87F94'>{int(row['n_kill'].strip()) + int(row['n_kill'].strip()) // 4} {row['team_h'].strip()}</p>", unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center; font-weight: bold; font-size: 20px;'>{row['map'].strip()}</p>", unsafe_allow_html=True)
         sp, sc, h = cols[i].columns([1, 1, 1])
-        h.markdown(f"<div style='text-align: left; color: #C87F94'>{row['team_h'].strip()}_{row['player_h']}</div>", unsafe_allow_html=True)
+        h.markdown(f"<div style='text-align: left; font-weight: bold; color: #C87F94'>{row['team_h'].strip()}_{row['player_h']}</div>", unsafe_allow_html=True)
         h.markdown(f"<div style='text-align: left'>{row['character_h']}</div>", unsafe_allow_html=True)
         for j in range(1, 5):
-            sp.markdown(f"<p style='text-align: right; color: #92C1C7'>{row['team_s'].strip()}_{row[f'player_s_{j}']}</p>", unsafe_allow_html=True)
+            sp.markdown(f"<p style='text-align: right; font-weight: bold; color: #92C1C7'>{row['team_s'].strip()}_{row[f'player_s_{j}']}</p>", unsafe_allow_html=True)
             sc.markdown(f"<p style='text-align: left'>{row[f'character_s_{j}']}</p>", unsafe_allow_html=True)
 
 
