@@ -22,6 +22,7 @@ if "data" not in st.session_state:
     sheet_name = "IVL"
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
     st.session_state["data"] = pd.read_csv(url, dtype=str)
+    st.session_state["data_old"] = st.session_state["data"]
 
 data = st.session_state["data"]
 
@@ -51,6 +52,8 @@ with search_expander:
     st.session_state["character_s_4"] = sc4.text_input("Character", key="sc4_input")
     st.session_state["character_h"] = hc.text_input("Character", key="hc_input")
 
+def set_show_all(key):
+    st.session_state["show_all"] = key
 
 for keyword in ["season", "team_h", "team_s", "map", "player_h", "character_h"]:
     if keyword in st.session_state and st.session_state[keyword] != "":
@@ -62,28 +65,53 @@ for i in range(1, 5):
                 (((data["player_s_2"] == st.session_state[f"player_s_{i}"]) | np) & ((data["character_s_2"] == st.session_state[f"character_s_{i}"]) | nc)) | 
                 (((data["player_s_3"] == st.session_state[f"player_s_{i}"]) | np) & ((data["character_s_3"] == st.session_state[f"character_s_{i}"]) | nc)) | 
                 (((data["player_s_4"] == st.session_state[f"player_s_{i}"]) | np) & ((data["character_s_4"] == st.session_state[f"character_s_{i}"]) | nc))]
+    
+if not data.equals(st.session_state["data_old"]):
+    set_show_all(None)
+    st.session_state["data_old"] = data
 
-n_cards_per_row = 3
-for n_row, row in data.reset_index().iterrows():
-    i = n_row % n_cards_per_row
-    if i == 0:
-        st.write("---")
-        cols = st.columns(n_cards_per_row, gap="small")
-    # draw the card
-    with cols[i]:
-        st.caption(f"{row['season'].strip()} W{row['week'].strip()}D{row['day'].strip()}<br>MATCH{row['match'].strip()} ROUND {row['round'].strip()} {row['half'].strip()} HALF", unsafe_allow_html=True)
-        
-        sp, sc, h = cols[i].columns([1, 1, 1])
-        sc.markdown(f"<p style='text-align: center; font-weight: bold; font-size: 20px'>vs</p>", unsafe_allow_html=True)
-        sp.markdown(f"<p style='text-align: right; font-weight: bold; font-size: 20px; color: #92C1C7'>{row['team_s'].strip()} {4 - int(row['n_kill'].strip()) + (4 - int(row['n_kill'].strip())) // 4}</p>", unsafe_allow_html=True)
-        h.markdown(f"<p style='text-align: left; font-weight: bold; font-size: 20px; color: #C87F94'>{int(row['n_kill'].strip()) + int(row['n_kill'].strip()) // 4} {row['team_h'].strip()}</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='text-align: center; font-weight: bold; font-size: 20px;'>{row['map'].strip()}</p>", unsafe_allow_html=True)
-        sp, sc, h = cols[i].columns([1, 1, 1])
-        h.markdown(f"<div style='text-align: left; font-weight: bold; color: #C87F94'>{row['team_h'].strip()}_{row['player_h']}</div>", unsafe_allow_html=True)
-        h.markdown(f"<div style='text-align: left'>{row['character_h']}</div>", unsafe_allow_html=True)
-        for j in range(1, 5):
-            sp.markdown(f"<p style='text-align: right; font-weight: bold; color: #92C1C7'>{row['team_s'].strip()}_{row[f'player_s_{j}']}</p>", unsafe_allow_html=True)
-            sc.markdown(f"<p style='text-align: left'>{row[f'character_s_{j}']}</p>", unsafe_allow_html=True)
+if "show_all" in st.session_state and st.session_state["show_all"] is not None:
+    data_to_show = data[data["url"] == st.session_state["show_all"]]
+    for n_row, row in data_to_show.reset_index().iterrows():
+        c1, c2, c3 = st.columns([1, 3, 1])
+        c1.caption(f"<p style='text-align: left;'>{row['season'].strip()} W{row['week'].strip()}D{row['day'].strip()}<br>MATCH{row['match'].strip()} ROUND {row['round'].strip()} {row['half'].strip()} HALF</p>", unsafe_allow_html=True)
+        c2.markdown("# Game Data")
+        c3.button("Show less", on_click=set_show_all, args=[None])
 
+        ss, ts, m, th, sh = st.columns([1, 1, 3, 1, 1])
+        ss.markdown(f"<p style='text-align: right; font-weight: bold; font-size: 40px; color: #92C1C7'>{4 - int(row['n_kill'].strip()) + (4 - int(row['n_kill'].strip())) // 4}</p>", unsafe_allow_html=True)
+        ts.markdown(f"<p style='text-align: center; font-weight: bold; font-size: 40px; color: #92C1C7'>{row['team_s'].strip()}</p>", unsafe_allow_html=True)
+        m.markdown(f"<p style='text-align: center; font-size: 40px;'>{row['map'].strip()}</p>", unsafe_allow_html=True)
+        th.markdown(f"<p style='text-align: center; font-weight: bold; font-size: 40px; color: #C87F94'>{row['team_h'].strip()}</p>", unsafe_allow_html=True)
+        sh.markdown(f"<p style='text-align: left; font-weight: bold; font-size: 40px; color: #C87F94'>{int(row['n_kill'].strip()) + (int(row['n_kill'].strip())) // 4}</p>", unsafe_allow_html=True)
+
+        # 여기서부터
+        # player_s, char_s, escape, decode, hit, rescue, heal, contain, player_h, character_h = st.columns([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+
+else:
+    n_cards_per_row = 3
+    flag = True
+    for n_row, row in data.reset_index().iterrows():
+        i = n_row % n_cards_per_row
+        if i == 0 and flag:
+            st.write("---")
+            cols = st.columns(n_cards_per_row, gap="small")
+        # draw the card
+        with cols[i]:
+            st.caption(f"{row['season'].strip()} W{row['week'].strip()}D{row['day'].strip()}<br>MATCH{row['match'].strip()} ROUND {row['round'].strip()} {row['half'].strip()} HALF", unsafe_allow_html=True)
+            
+            sp, sc, h = cols[i].columns([1, 1, 1])
+            sc.markdown(f"<p style='text-align: center; font-weight: bold; font-size: 20px'>vs</p>", unsafe_allow_html=True)
+            sp.markdown(f"<p style='text-align: right; font-weight: bold; font-size: 20px; color: #92C1C7'>{row['team_s'].strip()} {4 - int(row['n_kill'].strip()) + (4 - int(row['n_kill'].strip())) // 4}</p>", unsafe_allow_html=True)
+            h.markdown(f"<p style='text-align: left; font-weight: bold; font-size: 20px; color: #C87F94'>{int(row['n_kill'].strip()) + int(row['n_kill'].strip()) // 4} {row['team_h'].strip()}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p style='text-align: center; font-weight: bold; font-size: 20px;'>{row['map'].strip()}</p>", unsafe_allow_html=True)
+            sp, sc, h = cols[i].columns([1, 1, 1])
+            h.markdown(f"<div style='text-align: left; font-weight: bold; color: #C87F94'>{row['team_h'].strip()}_{row['player_h']}</div>", unsafe_allow_html=True)
+            h.markdown(f"<p style='text-align: left'>{row['character_h']}</p>", unsafe_allow_html=True)
+            h.markdown(f"<div style='text-align: left'><a href='{row['url'].strip()}' style='text-decoration-line: none; font-size: 30px; color: black'>\u25B6</a></div>", unsafe_allow_html=True)
+            h.button("Show more", key=n_row, on_click=set_show_all, args=[row['url'].strip()])
+            for j in range(1, 5):
+                sp.markdown(f"<p style='text-align: right; font-weight: bold; color: #92C1C7'>{row['team_s'].strip()}_{row[f'player_s_{j}']}</p>", unsafe_allow_html=True)
+                sc.markdown(f"<p style='text-align: left'>{row[f'character_s_{j}']}</p>", unsafe_allow_html=True)
 
 # st.table(data)
