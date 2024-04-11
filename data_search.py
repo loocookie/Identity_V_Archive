@@ -123,4 +123,4 @@ if screen_d['innerWidth'] > 640:
     # st.table(data)
 
 else:
-    st.write("If you are using a mobile device, please rotate it.")
+    st.write("This page is optimized to PCs. If you are using a mobile device, please rotate it.")
