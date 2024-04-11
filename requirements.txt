@@ -2,3 +2,5 @@ numpy==1.24.2
 pandas==2.0.1
 streamlit==1.33.0
 streamlit_screen_stats==0.0.34
+streamlit-browser-session-storage
+streamlit-local-storage
