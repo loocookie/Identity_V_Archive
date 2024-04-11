@@ -24,7 +24,6 @@ search_expander = st.expander("Search", expanded=True)
 def set_show_all(key):
         st.session_state["show_all"] = key
 
-st.write(screen_d['innerWidth'])
 if screen_d['innerWidth'] > 640:
     with search_expander:
         season, t_s, t_s_s, text_colon, t_h_s, t_h, m = st.columns([3, 3, 1, 1, 1, 3, 3])
@@ -97,7 +96,6 @@ if screen_d['innerWidth'] > 640:
 
     else:
         n_cards_per_row = max(1, screen_d["innerWidth"] // 494)
-        st.write(screen_d['innerWidth'])
         flag = True
         for n_row, row in data.reset_index().iterrows():
             i = n_row % n_cards_per_row
@@ -123,3 +121,6 @@ if screen_d['innerWidth'] > 640:
                     sc.markdown(f"<p style='text-align: left'>{row[f'character_s_{j}']}</p>", unsafe_allow_html=True)
 
     # st.table(data)
+
+else:
+    st.write("If you are using a mobile device, please rotate it.")
