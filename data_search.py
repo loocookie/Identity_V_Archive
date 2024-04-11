@@ -24,6 +24,7 @@ search_expander = st.expander("Search", expanded=True)
 def set_show_all(key):
         st.session_state["show_all"] = key
 
+st.write(screen_d['innerWidth'])
 if screen_d['innerWidth'] > 640:
     with search_expander:
         season, t_s, t_s_s, text_colon, t_h_s, t_h, m = st.columns([3, 3, 1, 1, 1, 3, 3])
