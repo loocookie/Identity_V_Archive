@@ -1,4 +1,5 @@
 import streamlit as st
+from st_screen_stats import ScreenData
 import pandas as pd
 import numpy as np
 
@@ -6,15 +7,9 @@ import numpy as np
 st.set_page_config(page_title="IVL Archive", layout="wide")
 st.title("IVL Archive")
 
-
-try:
-    from st_screen_stats import ScreenData
-    screenD = ScreenData(setTimeout=0)
-    screen_d = screenD.st_screen_data_window_top()
-    st.session_state["innerwidth"] = screen_d['innerWidth']
-except:
-    from streamlit_js_eval import streamlit_js_eval
-    streamlit_js_eval(js_expressions='window.innerWidth', key='innerwidth')
+screenD = ScreenData(setTimeout=0)
+screen_d = screenD.st_screen_data_window_top()
+innerwidth = screen_d['innerWidth']
 
 
 if "data" not in st.session_state:
@@ -31,7 +26,7 @@ search_expander = st.expander("Search", expanded=True)
 def set_show_all(key):
         st.session_state["show_all"] = key
 
-if st.session_state["innerwidth"] > 640:
+if innerwidth > 640:
     with search_expander:
         season, t_s, t_s_s, text_colon, t_h_s, t_h, m = st.columns([3, 3, 1, 1, 1, 3, 3])
         st.session_state["season"] = season.text_input("Season", key="season_input")
@@ -102,8 +97,7 @@ if st.session_state["innerwidth"] > 640:
             # player_s, char_s, escape, decode, hit, rescue, heal, contain, player_h, character_h = st.columns([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
     else:
-        n_cards_per_row = max(1, st.session_state["innerwidth"] // 494)
-        st.write(st.session_state["innerwidth"])
+        n_cards_per_row = max(1, innerwidth // 494)
         flag = True
         for n_row, row in data.reset_index().iterrows():
             i = n_row % n_cards_per_row
