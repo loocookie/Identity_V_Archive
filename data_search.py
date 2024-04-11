@@ -9,8 +9,6 @@ st.title("IVL Archive")
 
 screenD = ScreenData(setTimeout=0)
 screen_d = screenD.st_screen_data_window_top()
-innerwidth = screen_d['innerWidth']
-
 
 if "data" not in st.session_state:
     sheet_id = "1t3gF2GR5PydYdEnwuBlwtx9MgpuYCaLk4T4O6PqmFA0"
@@ -26,7 +24,7 @@ search_expander = st.expander("Search", expanded=True)
 def set_show_all(key):
         st.session_state["show_all"] = key
 
-if innerwidth > 640:
+if screen_d['innerWidth'] > 640:
     with search_expander:
         season, t_s, t_s_s, text_colon, t_h_s, t_h, m = st.columns([3, 3, 1, 1, 1, 3, 3])
         st.session_state["season"] = season.text_input("Season", key="season_input")
@@ -97,7 +95,8 @@ if innerwidth > 640:
             # player_s, char_s, escape, decode, hit, rescue, heal, contain, player_h, character_h = st.columns([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
     else:
-        n_cards_per_row = max(1, innerwidth // 494)
+        n_cards_per_row = max(1, screen_d["innerWidth"] // 494)
+        st.write(screen_d['innerWidth'])
         flag = True
         for n_row, row in data.reset_index().iterrows():
             i = n_row % n_cards_per_row
