@@ -190,7 +190,7 @@ if screen_d['innerWidth'] > 640:
                 player_s.markdown(f"<p style='text-align: right; font-weight: bold; color: #92C1C7'>{row['team_s']}_{row[f'player_s_{i}']}</p>", unsafe_allow_html=True)
                 char_s.markdown(f"<p style='text-align: left'>{row[f'character_s_{i}']}</p>", unsafe_allow_html=True)
                 escape.write(":runner:" if row[f'escaped_{i}'] == '1' else ":skull:")
-                decode.markdown(f"<p style='text-align: center'>{deal_nan(row[f'decoding_progress_{i}'])}</p>", unsafe_allow_html=True)
+                decode.markdown(f"<p style='text-align: center'>{deal_nan(row[f'decoding_progress_{i}'])}{'%' if row[f'decoding_progress_{i}'] == row[f'decoding_progress_{i}'] else ''}</p>", unsafe_allow_html=True)
                 strike.markdown(f"<p style='text-align: center'>{deal_nan(row[f'pallet_strikes_{i}'])}</p>", unsafe_allow_html=True)
                 rescue.markdown(f"<p style='text-align: center'>{deal_nan(row[f'rescue_{i}'])}</p>", unsafe_allow_html=True)
                 heal.markdown(f"<p style='text-align: center'>{deal_nan(row[f'heal_{i}'])}</p>", unsafe_allow_html=True)
