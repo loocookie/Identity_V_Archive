@@ -93,6 +93,7 @@ if screen_d['innerWidth'] > 640:
         st.session_state["show_all"] = None
     if "show_all" in st.session_state and st.session_state["show_all"] is not None:
         data_to_show = data[data["url"] == st.session_state["show_all"]]
+        st.write("---")
         for n_row, row in data_to_show.reset_index().iterrows():
             _, c1, c2, c3, _ = st.columns([0.4, 1.8, 3.6, 1.8, 0.4])
             rd = 'round'
@@ -224,7 +225,7 @@ if screen_d['innerWidth'] > 640:
                 for j in range(1, 5):
                     sp.markdown(f"<p style='text-align: right; font-weight: bold; color: #92C1C7'>{row['team_s']}_{row[f'player_s_{j}']}</p>", unsafe_allow_html=True)
                     sc.markdown(f"<p style='text-align: left'>{row[f'character_s_{j}']}</p>", unsafe_allow_html=True)
-
+        st.write("---")
     # st.table(data)
 
 else:
