@@ -75,7 +75,6 @@ if screen_d['innerWidth'] > 640:
         if keyword in st.session_state and st.session_state[keyword] != "":
             data = data[data[keyword] == st.session_state[keyword]]
     if "score_s" in st.session_state and st.session_state["score_s"] != "":
-        print(st.session_state["score_s"][-1])
         data = data[data["n_kill"] == str(int(st.session_state["score_s"][-1]) - int(st.session_state["score_s"][-1]) // 4)]
     for i in range(1, 5):
         np = f"player_s_{i}" not in st.session_state or st.session_state[f"player_s_{i}"] == ""
