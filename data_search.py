@@ -146,9 +146,8 @@ if screen_d['innerWidth'] > 640:
                 cols[2 + i].markdown(f"<p style='text-align: center'>{ps[i]}</p>", unsafe_allow_html=True)
 
             st.markdown("<br>", unsafe_allow_html=True)
-            if int(row['round']) < 3:
-                _, _, m_b, _, _ = st.columns([1, 1, 3, 1, 1])
-                m_b.markdown(f"<div style='text-align: center; font-size: 20px; color: {'#92C1C7;' if row['ban_map_team'] == row['team_s'] else '#C87F94'}; text-decoration: line-through'>{deal_nan(row['ban_map'])}</div>", unsafe_allow_html=True)
+            _, _, m_b, _, _ = st.columns([1, 1, 3, 1, 1])
+            m_b.markdown(f"<div style='text-align: center; font-size: 20px; color: {'#92C1C7;' if row['ban_map_team'] == row['team_s'] else '#C87F94'}; text-decoration: line-through'>{deal_nan(row['ban_map'])}</div>", unsafe_allow_html=True)
 
             ss, ts, m, th, sh = st.columns([1, 1, 3, 1, 1])
             ss.markdown(f"<p style='text-align: right; font-weight: bold; font-size: 40px; color: #92C1C7'>{4 - int(row['n_kill']) + (4 - int(row['n_kill'])) // 4}</p>", unsafe_allow_html=True)
