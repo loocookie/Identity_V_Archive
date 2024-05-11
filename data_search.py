@@ -199,6 +199,7 @@ if screen_d['innerWidth'] > 640:
             st.write("---")
 
     else:
+        st.write(f"{len(data)} game{'s' if len(data) > 1 else ''} exist{'' if len(data) > 1 else 's'}")
         n_cards_per_row = max(1, screen_d["innerWidth"] // 494)
         flag = True
         for n_row, row in data.reset_index().iterrows():
